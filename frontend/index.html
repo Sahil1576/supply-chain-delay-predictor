@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Supply Chain Delay Predictor</title>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="brand"><div class="logo">🚚</div>DelayIQ</div>
+  <button class="icon-btn" id="themeBtn" aria-label="Toggle theme">🌙</button>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>Predict supply chain delays,<br><span>get an AI-written report</span></h1>
+    <p>Upload your shipment CSV. The model scores every shipment and an LLM turns the results into a stakeholder-ready analysis.</p>
+  </section>
+
+  <section class="card" id="uploadCard">
+    <div class="drop" id="drop" tabindex="0">
+      <div class="big">📄</div>
+      <strong>Drag &amp; drop your CSV here, or click to browse</strong>
+      <small>Must include the <code>Date</code> and <code>Delayed</code> columns</small>
+      <input type="file" id="fileInput" accept=".csv" hidden>
+    </div>
+
+    <div class="file" id="fileBox">
+      <span style="font-size:22px">📊</span>
+      <div><div class="name" id="fileName"></div><div class="meta" id="fileMeta"></div></div>
+      <button id="clearBtn" title="Remove file">✕</button>
+    </div>
+
+    <div class="row">
+      <button class="btn" id="runBtn" disabled>Generate report</button>
+      <div class="api">API <input id="apiUrl" value="" placeholder="same server (leave empty)" spellcheck="false"></div>
+    </div>
+
+    <div class="status" id="status">
+      <ul class="steps" id="steps">
+        <li><span class="dot"></span>Uploading file</li>
+        <li><span class="dot"></span>Running the prediction model</li>
+        <li><span class="dot"></span>Writing the report with the LLM</li>
+      </ul>
+    </div>
+    <div class="error" id="error"></div>
+  </section>
+
+  <section id="results">
+    <aside class="card toc"><h4>Contents</h4><nav id="toc"></nav></aside>
+    <article class="card">
+      <div class="toolbar">
+        <h2>Delay Analysis Report</h2>
+        <div class="row" style="margin:0">
+          <button class="btn ghost" id="copyBtn">Copy</button>
+          <button class="btn ghost" id="mdBtn">Download .md</button>
+          <button class="btn ghost" id="pdfBtn">Print / PDF</button>
+        </div>
+      </div>
+      <div class="report" id="report"></div>
+    </article>
+  </section>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
