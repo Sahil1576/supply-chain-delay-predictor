@@ -13,63 +13,69 @@ def predict_delay(csv_path):
     # many details to LLM and then give prompt to the LLM to take these details and generate the full summary of this and
     # reason of why delay is predicted and how to solve this.
 
-    df = pd.read_csv(csv_path)
 
-    X = df.drop(columns=["Delayed"])
-    y = df['Delayed']
+    try:
 
-    X['Date'] = pd.to_datetime(X['Date'], errors="coerce")
+        df = pd.read_csv(csv_path)
 
-    X['Day'] = X['Date'].dt.day
-    X['Month'] = X['Date'].dt.month
-    X['Year'] = X['Date'].dt.year
+        X = df.drop(columns=["Delayed"])
+        y = df['Delayed']
 
-    X.drop(columns=['Date'], inplace=True)
+        X['Date'] = pd.to_datetime(X['Date'], errors="coerce")
 
-    null_values = X.isnull().sum().to_string()
+        X['Day'] = X['Date'].dt.day
+        X['Month'] = X['Date'].dt.month
+        X['Year'] = X['Date'].dt.year
 
-    duplicate_rows = X.duplicated().sum()
+        X.drop(columns=['Date'], inplace=True)
 
-    shape = X.shape
+        null_values = X.isnull().sum().to_string()
 
-    describe = X.describe().to_string()
+        duplicate_rows = X.duplicated().sum()
 
-    y_pred = pipeline.predict(X)
+        shape = X.shape
 
-    accuracy = accuracy_score(y,y_pred)
+        describe = X.describe().to_string()
 
-    classify_report = classification_report(y,y_pred)
+        y_pred = pipeline.predict(X)
 
-    matrix = confusion_matrix(y,y_pred)
+        accuracy = accuracy_score(y,y_pred)
 
-    features = pipeline.named_steps['preprocessing'].get_feature_names_out()
+        classify_report = classification_report(y,y_pred)
 
-    coeficient= pipeline.named_steps['model'].coef_[0]
+        matrix = confusion_matrix(y,y_pred)
 
-    feature_importance = {
-        "Feature":features,
-        "Imporatnace":coeficient,
-        "Absolute_Imporatnace":abs(coeficient)
-    }
+        features = pipeline.named_steps['preprocessing'].get_feature_names_out()
 
-    return f"""
-    Dataset : {X}
+        coeficient= pipeline.named_steps['model'].coef_[0]
 
-    Null values : {null_values}
-    
-    Duplicate Rows : {duplicate_rows}
+        feature_importance = {
+            "Feature":features,
+            "Imporatnace":coeficient,
+            "Absolute_Imporatnace":abs(coeficient)
+        }
 
-    Shape : {shape}
+        return f"""
+        Dataset : {X}
 
-    Describe : {describe}
+        Null values : {null_values}
+        
+        Duplicate Rows : {duplicate_rows}
 
-    Accuracy : {accuracy}
+        Shape : {shape}
 
-    Classification Report : {classify_report}
+        Describe : {describe}
 
-    Confusion Matrix : {matrix}
+        Accuracy : {accuracy}
 
-    Feature Importance : {feature_importance}
-    
-    Predicted Label : {y_pred}
-    """
+        Classification Report : {classify_report}
+
+        Confusion Matrix : {matrix}
+
+        Feature Importance : {feature_importance}
+        
+        Predicted Label : {y_pred}
+        """
+
+    except Exception as e:
+        return f"Error : {e}"

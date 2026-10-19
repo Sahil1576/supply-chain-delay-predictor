@@ -11,19 +11,24 @@ structure_output = StrOutputParser()
 
 def main(csv_path):
 
-    # print("Reading CSV...")
-    context = predict_delay(csv_path)
+    try:
 
-    # print("Creating Chain...")
-    chain = prompt | llm | structure_output
+        # print("Reading CSV...")
+        context = predict_delay(csv_path)
 
-    # print("Calling LLM...")
-    response = chain.invoke({"context":context})
+        # print("Creating Chain...")
+        chain = prompt | llm | structure_output
 
-    # print("Generate Response...")
-    # if response:
-    #     print(response)
-    # else:
-    #     print("Response is Null.")
+        # print("Calling LLM...")
+        response = chain.invoke({"context":context})
 
-    return response
+        # print("Generate Response...")
+        # if response:
+        #     print(response)
+        # else:
+        #     print("Response is Null.")
+
+        return response
+
+    except Exception as e:
+        raise f"Error : {e}"
