@@ -4,7 +4,14 @@ from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from report_generator.report_generator import main
+from report_generator.report_generator import PipelineRunner
+
+from LLM.llm import llm
+
+from report_generator.predict_file import Pipeline, model
+from LLM.system_prompt import SYSTEM_PROMPT
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
 
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_DIR = BASE_DIR / "static"
@@ -20,6 +27,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+prompt = ChatPromptTemplate.from_template(SYSTEM_PROMPT)
+
+structure_output = StrOutputParser()
 
 @app.post("/predict")
 def prediction(file: UploadFile = File(...)):
@@ -27,7 +37,15 @@ def prediction(file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail="Please upload a .csv file.")
 
     try:
-        return main(file.file)
+        runner = PipelineRunner(
+            llm=llm, 
+            pipeline=Pipeline(csv_file=file.file, model=model),
+            prompt=prompt,
+            structure_output=structure_output
+        )
+
+        return runner.run()
+
     except KeyError as e:
         raise HTTPException(
             status_code=422,
