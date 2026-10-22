@@ -12,7 +12,7 @@ class Pipeline:
         self.csv_file = csv_file
         self.model = model
 
-    def read_csv(self):
+    def read_csv(self) -> pd.DataFrame:
         if pd.errors.EmptyDataError:
             raise ValueError("The CSV is empty. It must contain Data.")
         
@@ -20,7 +20,7 @@ class Pipeline:
 
         return df
 
-    def split_feature(self, df):
+    def split_feature(self, df) -> tuple[pd.DataFrame, pd.Series]:
         if not isinstance(df, pd.DataFrame):
             raise TypeError("Input must be pandas DataFrame.")
         
@@ -35,7 +35,7 @@ class Pipeline:
 
         return X, y
 
-    def change_dtype(self, X):
+    def change_dtype(self, X) -> pd.DataFrame:
         if not isinstance(X, pd.DataFrame):
             raise TypeError("Input Type must be pandas DataFrame.")
         
@@ -57,7 +57,7 @@ class Pipeline:
             raise TypeError("'Date' feature type must be datetime or str")
 
 
-    def check_data_quality(self, X):
+    def check_data_quality(self, X) -> dict:
         if not isinstance(X, pd.DataFrame):
             raise TypeError("Input Type must be pandas DataFrame.")
 
@@ -77,7 +77,7 @@ class Pipeline:
             "Describe":describe
         }
 
-    def prediction_report(self, X, y):
+    def prediction_report(self, X, y) -> dict:
         if not isinstance(X, pd.DataFrame):
             raise TypeError("Input Type must be pandas DataFrame.")
 
