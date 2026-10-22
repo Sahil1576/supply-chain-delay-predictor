@@ -1,4 +1,4 @@
-from report_generator.predict_file import Pipeline, model
+from report_generator.pipeline import Pipeline, model
 
 class PipelineRunner:
     def __init__(self, llm, pipeline, prompt, structure_output):

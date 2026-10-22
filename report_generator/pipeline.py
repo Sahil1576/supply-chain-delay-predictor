@@ -15,9 +15,14 @@ class Pipeline:
     def read_csv(self) -> pd.DataFrame:
         if pd.errors.EmptyDataError:
             raise ValueError("The CSV is empty. It must contain Data.")
-        
-        df = pd.read_csv(self.csv_file)
+        try:
+            df = pd.read_csv(self.csv_file)
 
+        except pd.errors.EmptyDataError as ede:
+            raise ValueError("CSV file is empty. It must contain data.") from ede
+
+        if df.empty:
+            raise ValueError("CSV file has headers but no rows.")
         return df
 
     def split_feature(self, df) -> tuple[pd.DataFrame, pd.Series]:

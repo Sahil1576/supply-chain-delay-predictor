@@ -4,11 +4,11 @@ from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from report_generator.report_generator import PipelineRunner
+from report_generator.pipeline_runner import PipelineRunner
 
 from LLM.llm import llm
 
-from report_generator.predict_file import Pipeline, model
+from report_generator.pipeline import Pipeline, model
 from LLM.system_prompt import SYSTEM_PROMPT
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
